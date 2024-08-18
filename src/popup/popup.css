@@ -66,60 +66,6 @@ main {
     overflow-y: auto;
 }
 
-/* Category style */
-#categories {
-    margin-bottom: 20px;
-}
-
-#categories h2 {
-    font-size: 18px;
-    margin: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#add-category {
-    background-color: #3ab57d;
-    color: #fff;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    transition: background-color 0.3s;
-}
-
-#add-category:hover {
-    background-color: #339a5b;
-}
-
-#category-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.category-item {
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #e0f2f1;
-    color: #333;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-.category-item.dark-mode {
-    background-color: #383838;
-    color: #e0e0e0;
-    border: 1px solid #555;
-}
-
 /* Extension style */
 #extensions {
     display: flex;
@@ -140,8 +86,9 @@ main {
 }
 
 .extension-item {
-    display: inline-flex;
-    padding: 2px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
     border-radius: 8px;
     color: #333;
     transition: background-color 0.3s;
@@ -158,10 +105,6 @@ main {
 
 .extension-item:hover {
     background-color: #b2dfdb;
-}
-
-.extension-name {
-    margin-left: 10px;
 }
 
 /* Theme button style */
