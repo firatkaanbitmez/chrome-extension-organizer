@@ -26,8 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     extList.appendChild(extDiv);
                 });
 
+                // Add event listener to delete button
                 categoryHeader.querySelector('.delete-btn')?.addEventListener('click', function() {
-                    deleteCategory(categoryName);
+                    confirmDelete(categoryName);
                 });
 
                 const inputField = categoryHeader.querySelector('.input-field');
@@ -112,6 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadCategories();  // Refresh the list of categories
             });
         });
+    }
+
+    function confirmDelete(categoryName) {
+        const userConfirmed = confirm(`Are you sure you want to delete the category "${categoryName}"? This action cannot be undone.`);
+        if (userConfirmed) {
+            deleteCategory(categoryName);
+        }
     }
 
     function deleteCategory(categoryName) {

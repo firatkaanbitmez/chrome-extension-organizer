@@ -9,11 +9,8 @@
 
 body {
     width: 320px;
-    height: 420px;
     background-color: var(--background-color);
     color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
-    display: flex;
     flex-direction: column;
 }
 
@@ -21,11 +18,11 @@ body {
 header {
     background-color: var(--primary-color);
     color: var(--header-text-color);
-    padding: 12px;
+    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid var(--primary-dark);
+    border-bottom: 0px solid var(--primary-dark);
 }
 
 header h1 {
@@ -170,12 +167,11 @@ h2 {
 /* Extension Item Styles */
 .extension-item {
     background-color: var(--item-bg);
-    padding: 10px;
+    padding: 2px;
     border-radius: 10px;
     display: flex;
     align-items: center;
-    border: 1px solid var(--border-color);
-    transition: background-color 0.3s;
+    font-size: larger;
 }
 
 .extension-item label {
@@ -186,6 +182,9 @@ h2 {
 
 .extension-item input[type="checkbox"] {
     margin-right: 10px;
+    width: 20px; /* Increased checkbox width */
+    height: 20px; /* Increased checkbox height */
+    accent-color: var(--checkbox-color); /* Dynamic checkbox color */
 }
 
 .extension-item:hover {
@@ -198,13 +197,10 @@ h2 {
     padding: 12px;
     border-radius: 10px;
     position: relative;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-item:hover {
     background-color: var(--item-hover-bg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .category-item h3 {
@@ -228,7 +224,7 @@ h2 {
     border: none;
     cursor: pointer;
     position: absolute;
-    top: 12px;
+    top: 8px;
     right: 12px;
     font-size: 18px;
     transition: color 0.3s;
@@ -252,8 +248,8 @@ h2 {
 :root {
     --background-color: #f0f2f5;
     --text-color: #333;
-    --primary-color: #007acc;
-    --primary-dark: #005b99;
+    --primary-color: #3ab37c;
+    --primary-dark: #3ab37c;
     --secondary-color: #ff5e5e;
     --secondary-hover-color: #e04b4b;
     --item-bg: #ffffff;
@@ -264,7 +260,8 @@ h2 {
     --delete-btn-color: #e57373;
     --delete-btn-hover-color: #d32f2f;
     --slider-off-color: #ccc;
-    --slider-on-color: #007acc;
+    --slider-on-color: #3ab37c;
+    --checkbox-color: #3ab37c; /* Light theme checkbox color */
 }
 
 body.dark-mode {
@@ -283,4 +280,5 @@ body.dark-mode {
     --delete-btn-hover-color: #bf616a;
     --slider-off-color: #666;
     --slider-on-color: #81a1c1;
+    --checkbox-color: #81a1c1; /* Dark theme checkbox color */
 }
