@@ -84,11 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadCategories(categories) {
         categoriesContainer.innerHTML = '';
-        Object.keys(categories).sort().forEach(category => {
+    
+        // Kategorileri sıralayarak diziye çevir, "Uncategorized" hariç
+        const sortedCategories = Object.keys(categories).filter(cat => cat !== "Uncategorized").sort();
+    
+        // "Uncategorized" kategorisini diziye manuel olarak ekle
+        if (categories["Uncategorized"]) {
+            sortedCategories.push("Uncategorized");
+        }
+    
+        // Tüm kategorileri DOM'a ekle
+        sortedCategories.forEach(category => {
             const catDiv = document.createElement('div');
             catDiv.className = 'category-item';
             catDiv.dataset.name = category;
-            // Check if the category is 'Uncategorized' before adding the delete button
             catDiv.innerHTML = `
                 <h3>${category}</h3>
                 ${category !== "Uncategorized" ? `<button class="delete-category" data-category-name="${category}">X</button>` : ""}

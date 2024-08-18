@@ -291,8 +291,8 @@ h2 {
 :root {
     --background-color: #f0f2f5;
     --text-color: #333;
-    --primary-color: #3ab37c;
-    --primary-dark: #3ab37c;
+    --primary-color: #1aad6b;
+    --primary-dark: #1aad6b;
     --secondary-color: #ff5e5e;
     --secondary-hover-color: #e04b4b;
     --item-bg: #ffffff;
@@ -303,9 +303,9 @@ h2 {
     --delete-btn-color: #e57373;
     --delete-btn-hover-color: #d32f2f;
     --slider-off-color: #ccc;
-    --slider-on-color: #3ab37c;
-    --checkbox-color: #3ab37c; 
-    --options-icon-color: #fcd53f; 
+    --slider-on-color: #1aad6b;
+    --checkbox-color: #1aad6b; 
+    --options-icon-color: #ffffff; 
 }
 
 body.dark-mode {
@@ -325,6 +325,6 @@ body.dark-mode {
     --slider-off-color: #666;
     --slider-on-color: #81a1c1;
     --checkbox-color: #81a1c1; 
-    --options-icon-color: #fcd53f; 
+    --options-icon-color: #ffffff; 
 }
 
