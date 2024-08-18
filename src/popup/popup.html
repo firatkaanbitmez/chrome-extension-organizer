@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension Organizer</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body class="light-mode">
+    <header>
+        <h1>Extension Organizer</h1>
+        <button id="theme-toggle-popup">Dark Mode</button>
+    </header>
+    <main>
+        <button id="add-category" title="Add Category">+</button>
+        <section id="categories">
+            <div id="category-list" class="category-list">
+                <!-- Categories will be added here -->
+            </div>
+        </section>
+        <section id="extensions">
+            <h2>Extensions</h2>
+            <div id="extension-list" class="extension-list">
+                <!-- Extensions will be added here -->
+            </div>
+        </section>
+    </main>
+    <script src="popup.js"></script>
+</body>
+</html>
