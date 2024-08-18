@@ -11,146 +11,126 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         // Load the theme preference from storage
         chrome.storage.sync.get(['theme'], (data) => {
-            if (data.theme === 'dark-mode') {
-                document.body.classList.add('dark-mode');
-                themeToggleButton.checked = true;
-            } else {
-                document.body.classList.remove('dark-mode');
-                themeToggleButton.checked = false;
-            }
+            document.body.classList.toggle('dark-mode', data.theme === 'dark-mode');
+            themeToggleButton.checked = data.theme === 'dark-mode';
         });
 
         // Load categories and extensions from storage
+        loadExtensionsData();
+        // Event Listeners
+        themeToggleButton.addEventListener('change', toggleTheme);
+        addCategoryButton.addEventListener('click', addCategory);
+    }
+    categoriesContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-category')) {
+            const categoryName = event.target.dataset.categoryName;
+            deleteCategory(categoryName);
+        }
+    });
+   
+    function loadExtensionsData() {
         chrome.storage.local.get({ categories: {} }, (data) => {
             if (!data.categories["Uncategorized"]) {
                 data.categories["Uncategorized"] = [];
             }
             chrome.management.getAll((extensions) => {
                 extensions.forEach((ext) => {
-                    if (!isExtensionCategorized(data.categories, ext.id)) {
+                    const foundCategory = Object.keys(data.categories).find(category => 
+                        data.categories[category].some(e => e.id === ext.id));
+                    if (!foundCategory) {
                         data.categories["Uncategorized"].push({
                             id: ext.id,
                             name: ext.name,
                             enabled: ext.enabled
                         });
+                    } else {
+                        const index = data.categories[foundCategory].findIndex(e => e.id === ext.id);
+                        data.categories[foundCategory][index].enabled = ext.enabled;
                     }
                 });
                 chrome.storage.local.set({ categories: data.categories }, () => {
                     loadCategories(data.categories);
-                    loadExtensions(data.categories["Uncategorized"]);
                 });
             });
         });
-
-        // Event Listeners
-        themeToggleButton.addEventListener('change', toggleTheme);
-        addCategoryButton.addEventListener('click', addCategory);
     }
 
-    // Check if an extension is already categorized
-    function isExtensionCategorized(categories, extensionId) {
-        return Object.values(categories).some((category) =>
-            category.some((ext) => ext.id === extensionId)
-        );
-    }
-
-    // Load extensions in the Uncategorized section
-    function loadExtensions(extensions) {
-        extensionsContainer.innerHTML = '';
-        extensions.sort((a, b) => a.name.localeCompare(b.name)).forEach((ext) => {
-            const extDiv = createExtensionDiv(ext, "Uncategorized");
-            extensionsContainer.appendChild(extDiv);
-        });
-    }
-
-    // Create the extension item div
-    function createExtensionDiv(ext, category) {
+    function createExtensionDiv(ext) {
         const div = document.createElement('div');
         div.className = 'extension-item';
         div.setAttribute('draggable', 'true');
         div.dataset.id = ext.id;
-        div.dataset.name = ext.name;
         div.innerHTML = `
             <input type="checkbox" id="chk-${ext.id}" ${ext.enabled ? 'checked' : ''}>
             <label for="chk-${ext.id}">${ext.name}</label>
         `;
-        div.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text', JSON.stringify({ id: ext.id, name: ext.name, enabled: ext.enabled, category }));
+        div.querySelector('input[type="checkbox"]').addEventListener('change', e => {
+            chrome.management.setEnabled(ext.id, e.target.checked, () => {
+                // Refresh data to reflect the change across the UI
+                loadExtensionsData();
+            });
         });
-        div.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
-            chrome.management.setEnabled(ext.id, e.target.checked);
+        div.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', JSON.stringify(ext));
         });
         return div;
     }
 
-    // Load categories into the UI
     function loadCategories(categories) {
         categoriesContainer.innerHTML = '';
-        Object.keys(categories).sort().forEach((category) => {
-            if (category !== 'Uncategorized') {
-                appendCategoryDiv(category, categories[category]);
-            }
+        Object.keys(categories).sort().forEach(category => {
+            const catDiv = document.createElement('div');
+            catDiv.className = 'category-item';
+            catDiv.dataset.name = category;
+            catDiv.innerHTML = `
+                <h3>${category}</h3>
+                <button class="delete-category" data-category-name="${category}">🗑️</button>
+                <div class="extensions-in-category"></div>
+            `;
+            const extContainer = catDiv.querySelector('.extensions-in-category');
+            categories[category].forEach(ext => {
+                extContainer.appendChild(createExtensionDiv(ext));
+            });
+            catDiv.addEventListener('dragover', e => e.preventDefault());
+            catDiv.addEventListener('drop', e => handleDrop(e, category));
+            categoriesContainer.appendChild(catDiv);
         });
     }
 
-    // Append a category div to the UI
-    function appendCategoryDiv(category, extensions) {
-        const catDiv = document.createElement('div');
-        catDiv.className = 'category-item';
-        catDiv.dataset.name = category;
-        catDiv.innerHTML = `
-            <h3>${category}</h3>
-            <div class="extensions-in-category" data-category="${category}"></div>
-            <button class="delete-category">X</button>
-        `;
-        const extContainer = catDiv.querySelector('.extensions-in-category');
-        extensions.forEach((ext) => {
-            const extDiv = createExtensionDiv(ext, category);
-            extContainer.appendChild(extDiv);
-        });
-        catDiv.addEventListener('dragover', (e) => e.preventDefault());
-        catDiv.addEventListener('drop', (e) => handleDrop(e, category));
-        catDiv.querySelector('.delete-category').addEventListener('click', () => deleteCategory(category));
-        categoriesContainer.appendChild(catDiv);
-    }
-
-    // Handle the drag-and-drop functionality
     function handleDrop(event, categoryName) {
         event.preventDefault();
-        const extensionData = JSON.parse(event.dataTransfer.getData('text'));
+        const extensionData = JSON.parse(event.dataTransfer.getData('text/plain'));
         moveExtensionToCategory(extensionData, categoryName);
     }
 
-    // Move an extension to a different category
-    function moveExtensionToCategory(extensionData, categoryName) {
+    function moveExtensionToCategory(ext, categoryName) {
         chrome.storage.local.get({ categories: {} }, (data) => {
-            Object.keys(data.categories).forEach((cat) => {
-                data.categories[cat] = data.categories[cat].filter((ext) => ext.id !== extensionData.id);
+            // Remove extension from its current category
+            Object.keys(data.categories).forEach(cat => {
+                data.categories[cat] = data.categories[cat].filter(e => e.id !== ext.id);
             });
-            data.categories[categoryName].push(extensionData);
+            // Add extension to the new category
+            ext.category = categoryName;
+            data.categories[categoryName].push(ext);
             chrome.storage.local.set({ categories: data.categories }, () => {
                 loadCategories(data.categories);
-                loadExtensions(data.categories["Uncategorized"]);
             });
         });
     }
 
-    // Delete a category and reassign its extensions
+    function toggleTheme() {
+        const isDarkMode = themeToggleButton.checked;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        chrome.storage.sync.set({ theme: isDarkMode ? 'dark-mode' : 'light-mode' });
+    }
     function deleteCategory(categoryName) {
         chrome.storage.local.get({ categories: {} }, (data) => {
-            if (data.categories[categoryName]) {
-                const extensionsToReassign = data.categories[categoryName];
-                delete data.categories[categoryName];
-                data.categories["Uncategorized"] = data.categories["Uncategorized"].concat(extensionsToReassign);
-                chrome.storage.local.set({ categories: data.categories }, () => {
-                    loadExtensions(data.categories["Uncategorized"]);
-                    loadCategories(data.categories);
-                });
-            }
+            delete data.categories[categoryName];
+            chrome.storage.local.set({ categories: data.categories }, () => {
+                loadCategories(data.categories);
+            });
         });
     }
-
-    // Add a new category
     function addCategory() {
         const categoryName = newCategoryNameInput.value.trim();
         if (categoryName && !categoryName.includes("Uncategorized")) {
@@ -164,13 +144,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-    }
-
-    // Toggle between dark mode and light mode
-    function toggleTheme() {
-        const isDarkMode = themeToggleButton.checked;
-        document.body.classList.toggle('dark-mode', isDarkMode);
-        const theme = isDarkMode ? 'dark-mode' : 'light-mode';
-        chrome.storage.sync.set({ theme });
     }
 });
