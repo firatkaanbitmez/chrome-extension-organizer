@@ -1,181 +1,285 @@
-/* General styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Global Styles */
+* {
     margin: 0;
     padding: 0;
-    width: 300px;
-    height: 400px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    user-select: none; /* Metin seçimini devre dışı bırakır */
+}
+
+body {
+    width: 320px;
+    height: 420px;
+    background-color: var(--background-color);
+    color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
-    user-select: none;
-}
-
-/* Light theme */
-body.light-mode {
-    background-color: #f4f4f9;
-    color: #333;
-}
-
-body.light-mode header {
-    background-color: #3ab57d;
-    color: #fff;
-}
-
-body.light-mode main {
-    background-color: #ffffff;
-    color: #333;
-}
-
-/* Dark theme */
-body.dark-mode {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-}
-
-body.dark-mode header {
-    background-color: #333;
-    color: #e0e0e0;
-}
-
-body.dark-mode main {
-    background-color: #2c2c2c;
-    color: #e0e0e0;
-}
-
-/* Header style */
-header {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
     display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--primary-color);
+    color: var(--header-text-color);
+    padding: 12px;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-bottom: 2px solid var(--primary-dark);
+}
+
+header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    flex-grow: 1;
+    text-align: center;
+}
+
+header label {
+    display: flex;
     align-items: center;
 }
 
-/* Header title */
-header h1 {
-    margin: 0;
-    font-size: 16px;
+/* Toggle Switch for Dark Mode */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    margin-left: 10px;
 }
 
-/* Main content */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--slider-off-color);
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--slider-on-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+.slider:after {
+    content: '☀️';
+    position: absolute;
+    left: 2px;
+    top: 3px;
+    font-size: 18px;
+    transition: 0.4s;
+}
+
+input:checked + .slider:after {
+    content: '🌙';
+    left: 34px;
+}
+
+/* Main Content Styles */
 main {
-    padding: 10px;
+    padding: 16px;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: calc(100% - 60px);
+    gap: 20px;
     overflow-y: auto;
 }
 
-/* Extension style */
-#extensions {
-    display: flex;
-    flex-direction: column;
+h2 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
-#extensions h2 {
-    font-size: 18px;
-    margin: 0;
+/* Add Category Input with Button Inside */
+.add-category-container {
+    position: relative;
+    width: 100%;
 }
 
+#new-category-name {
+    width: 100%;
+    padding: 10px 50px 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    transition: border-color 0.3s;
+}
+
+#new-category-name:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+#add-category {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#add-category:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Category & Extension Containers */
+#category-list,
 #extension-list {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 0;
-    margin: 0;
+    gap: 14px;
 }
 
+/* Extension Item Styles */
 .extension-item {
+    background-color: var(--item-bg);
+    padding: 10px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    padding: 5px;
-    border-radius: 8px;
-    color: #333;
+    border: 1px solid var(--border-color);
     transition: background-color 0.3s;
-    cursor: pointer;
-    margin: 0;
-    font-size: 14px;
 }
 
-.extension-item.dark-mode {
-    background-color: #383838;
-    color: #e0e0e0;
-    border: 1px solid #555;
+.extension-item label {
+    margin-left: 10px;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.extension-item input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .extension-item:hover {
-    background-color: #b2dfdb;
+    background-color: var(--item-hover-bg);
 }
 
-/* Category style */
-#categories {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-}
-
-#categories h2 {
-    font-size: 18px;
-    margin: 0;
-}
-
-#category-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0;
-    margin: 0;
-}
-
+/* Category Item Styles */
 .category-item {
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    border-radius: 8px;
-    background-color: #f4f4f9;
-    border: 1px solid #ddd;
+    background-color: var(--item-bg);
+    padding: 12px;
+    border-radius: 10px;
     position: relative;
-    min-height: 50px;
-}
-
-.category-item.dark-mode {
-    background-color: #383838;
-    border-color: #555;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-item:hover {
-    background-color: #b2dfdb;
+    background-color: var(--item-hover-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.category-item .delete-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #ff4d4d;
-    color: #fff;
+.category-item h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 6px;
+}
+
+.category-item .extensions-in-category {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-item .delete-category {
+    background-color: transparent;
+    color: var(--delete-btn-color);
     border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 18px;
+    transition: color 0.3s;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid var(--delete-btn-color);
 }
 
-/* Theme button style */
-#theme-toggle-popup {
-    background-color: #3ab57d;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+.category-item .delete-category:hover {
+    color: var(--delete-btn-hover-color);
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: var(--delete-btn-hover-color);
 }
 
-#theme-toggle-popup:hover {
-    background-color: #339a5b;
+/* Theme Variables */
+:root {
+    --background-color: #f0f2f5;
+    --text-color: #333;
+    --primary-color: #007acc;
+    --primary-dark: #005b99;
+    --secondary-color: #ff5e5e;
+    --secondary-hover-color: #e04b4b;
+    --item-bg: #ffffff;
+    --item-hover-bg: #f9f9f9;
+    --border-color: #ddd;
+    --input-bg: #ffffff;
+    --header-text-color: #ffffff;
+    --delete-btn-color: #e57373;
+    --delete-btn-hover-color: #d32f2f;
+    --slider-off-color: #ccc;
+    --slider-on-color: #007acc;
+}
+
+body.dark-mode {
+    --background-color: #2e3440;
+    --text-color: #eceff4;
+    --primary-color: #81a1c1;
+    --primary-dark: #5e81ac;
+    --secondary-color: #bf616a;
+    --secondary-hover-color: #a54a53;
+    --item-bg: #3b4252;
+    --item-hover-bg: #434c5e;
+    --border-color: #4c566a;
+    --input-bg: #434c5e;
+    --header-text-color: #eceff4;
+    --delete-btn-color: #e57373;
+    --delete-btn-hover-color: #bf616a;
+    --slider-off-color: #666;
+    --slider-on-color: #81a1c1;
 }

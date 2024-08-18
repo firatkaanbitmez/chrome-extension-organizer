@@ -6,25 +6,27 @@
     <title>Extension Organizer</title>
     <link rel="stylesheet" href="popup.css">
 </head>
-<body class="light-mode">
+<body>
     <header>
         <h1>Extension Organizer</h1>
-        <button id="theme-toggle-popup">Dark Mode</button>
+        <label class="switch">
+            <input id="theme-toggle" type="checkbox">
+            <span class="slider"></span>
+        </label>
     </header>
+    
     <main>
         <section id="category-management">
-            <h2>Manage Categories</h2>
-            <input type="text" id="new-category-name" placeholder="Enter new category name">
-            <button id="add-category-button">Add Category</button>
-            <div id="category-list" class="category-list">
-                <!-- Dynamic categories will be added here -->
+            <div class="add-category-container">
+                <input type="text" id="new-category-name" placeholder="Enter new category name">
+                <button id="add-category">Add</button>
             </div>
+            <div id="category-list"></div>
         </section>
+        
         <section id="uncategorized-extensions">
             <h2>Uncategorized Extensions</h2>
-            <div id="extension-list" class="extension-list">
-                <!-- Uncategorized extensions will be listed here -->
-            </div>
+            <div id="extension-list"></div>
         </section>
     </main>
     <script src="popup.js"></script>
