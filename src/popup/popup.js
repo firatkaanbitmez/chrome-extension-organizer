@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const newCategoryNameInput = document.getElementById('new-category-name');
     const themeToggleButton = document.getElementById('theme-toggle-popup');
 
+    // Initialize or update categories on start
     chrome.storage.local.get({ categories: {} }, (data) => {
-        // Check and initialize Uncategorized category if not present
         if (!data.categories["Uncategorized"]) {
             data.categories["Uncategorized"] = [];
         }
         chrome.management.getAll((extensions) => {
-            // Assign all extensions to Uncategorized on initial load
             extensions.forEach(ext => {
-                if (!ext.category) {
+                // Assign to Uncategorized if not already categorized
+                if (!Object.values(data.categories).some(c => c.some(e => e.id === ext.id))) {
                     data.categories["Uncategorized"].push({
                         id: ext.id,
                         name: ext.name,
@@ -30,11 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadExtensions() {
         chrome.storage.local.get({ categories: {} }, (data) => {
-            extensionsContainer.innerHTML = '';
-            data.categories["Uncategorized"].forEach(ext => {
-                const extDiv = createExtensionDiv(ext, "Uncategorized");
-                extensionsContainer.appendChild(extDiv);
-            });
+            renderExtensions(data.categories["Uncategorized"]);
+        });
+    }
+
+    function renderExtensions(extensions) {
+        extensionsContainer.innerHTML = '';
+        extensions.sort((a, b) => a.name.localeCompare(b.name)).forEach(ext => {
+            const extDiv = createExtensionDiv(ext, "Uncategorized");
+            extensionsContainer.appendChild(extDiv);
         });
     }
 
@@ -60,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadCategories() {
         chrome.storage.local.get({ categories: {} }, (data) => {
             categoriesContainer.innerHTML = '';
-            Object.keys(data.categories).forEach(category => {
+            Object.keys(data.categories).sort().forEach(category => {
                 if (category !== 'Uncategorized') {
                     appendCategoryDiv(category, data.categories[category]);
                 }
@@ -92,14 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveExtensionToCategory(extensionData, categoryName) {
         chrome.storage.local.get({ categories: {} }, (data) => {
+            // Remove the extension from all categories
             Object.keys(data.categories).forEach(cat => {
-                if (cat !== categoryName) {
-                    data.categories[cat] = data.categories[cat].filter(ext => ext.id !== extensionData.id);
-                }
+                data.categories[cat] = data.categories[cat].filter(ext => ext.id !== extensionData.id);
             });
-            if (!data.categories[categoryName]) {
-                data.categories[categoryName] = [];
-            }
+            // Add the extension to the new category
             data.categories[categoryName].push(extensionData);
             chrome.storage.local.set({ categories: data.categories }, () => {
                 loadCategories(); // Refresh all categories
@@ -110,11 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function deleteCategory(name) {
         chrome.storage.local.get({ categories: {} }, (data) => {
-            delete data.categories[name];
-            chrome.storage.local.set({ categories: data.categories }, () => {
-                loadCategories();
-                loadExtensions();
-            });
+            if (data.categories[name]) {
+                const extensionsToReassign = data.categories[name];
+                delete data.categories[name];
+                data.categories["Uncategorized"] = data.categories["Uncategorized"].concat(extensionsToReassign);
+                chrome.storage.local.set({ categories: data.categories }, () => {
+                    loadExtensions(); // Refresh the uncategorized list
+                    loadCategories(); // Refresh all categories
+                });
+            }
         });
     }
 
@@ -125,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!data.categories.hasOwnProperty(categoryName)) {
                     data.categories[categoryName] = [];
                     chrome.storage.local.set({ categories: data.categories }, loadCategories);
-                    newCategoryNameInput.value = ''; // Clear input after adding
+                    newCategoryNameInput.value = '';
                 }
             });
         }
