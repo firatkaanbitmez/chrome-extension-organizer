@@ -328,3 +328,16 @@ body.dark-mode {
     --options-icon-color: #ffffff; 
 }
 
+
+.extension-icon {
+    width: 24px;  
+    height: 24px; 
+    margin-right: 10px; 
+}
+
+/* Checkbox Styles */
+.extension-item input[type="checkbox"] {
+    width: auto;  
+    height: auto;
+    accent-color: var(--checkbox-color); 
+}

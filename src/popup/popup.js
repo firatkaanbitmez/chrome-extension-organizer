@@ -47,11 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         data.categories["Uncategorized"].push({
                             id: ext.id,
                             name: ext.name,
-                            enabled: ext.enabled
+                            enabled: ext.enabled,
+                            icons: ext.icons
                         });
                     } else {
                         const index = data.categories[foundCategory].findIndex(e => e.id === ext.id);
                         data.categories[foundCategory][index].enabled = ext.enabled;
+                        data.categories[foundCategory][index].icons = ext.icons;
                     }
                 });
                 chrome.storage.local.set({ categories: data.categories }, () => {
@@ -66,13 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'extension-item';
         div.setAttribute('draggable', 'true');
         div.dataset.id = ext.id;
+        const iconURL = ext.icons ? ext.icons[ext.icons.length - 1].url : 'default_icon.png'; // Varsayılan ikon URL'si.
         div.innerHTML = `
             <input type="checkbox" id="chk-${ext.id}" ${ext.enabled ? 'checked' : ''}>
+            <img src="${iconURL}" alt="${ext.name}" class="extension-icon" />
             <label for="chk-${ext.id}">${ext.name}</label>
         `;
         div.querySelector('input[type="checkbox"]').addEventListener('change', e => {
             chrome.management.setEnabled(ext.id, e.target.checked, () => {
-                // Refresh data to reflect the change across the UI
                 loadExtensionsData();
             });
         });
@@ -81,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return div;
     }
+    
+    
 
     function loadCategories(categories) {
         categoriesContainer.innerHTML = '';
