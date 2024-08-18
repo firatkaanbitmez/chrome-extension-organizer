@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryButton = document.getElementById('add-category');
     const newCategoryNameInput = document.getElementById('new-category-name');
     const themeToggleButton = document.getElementById('theme-toggle');
+    const optionsButton = document.getElementById('options-button'); 
 
-    // Initialize and Load the App
     init();
 
     function init() {
@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event Listeners
         themeToggleButton.addEventListener('change', toggleTheme);
         addCategoryButton.addEventListener('click', addCategory);
+        optionsButton.addEventListener('click', openOptionsPage);
+
+
     }
     categoriesContainer.addEventListener('click', function(event) {
         if (event.target.classList.contains('delete-category')) {
@@ -27,7 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteCategory(categoryName);
         }
     });
-   
+    function openOptionsPage() {
+        chrome.runtime.openOptionsPage();
+    }
+    
     function loadExtensionsData() {
         chrome.storage.local.get({ categories: {} }, (data) => {
             if (!data.categories["Uncategorized"]) {

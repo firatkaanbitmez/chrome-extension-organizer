@@ -244,6 +244,49 @@ h2 {
     border-color: var(--delete-btn-hover-color);
 }
 
+/* options Button Icon */
+.options-icon {
+    font-size: 24px; 
+    border: none;
+    background: none;
+    color: var(--options-icon-color);
+    cursor: pointer;
+    position: absolute;
+    left: 10px;
+    top: 0px; 
+    transition: color 0.3s, transform 0.3s;
+    position: relative;
+}
+
+.options-icon:hover {
+    color: var(--options-icon-hover-color);
+    transform: scale(1.3); 
+}
+
+.options-icon::after {
+    content: "options";
+    position: absolute;
+    left: 110%; 
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    z-index: 1;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.options-icon:hover::after {
+    opacity: 1;
+    left: 130%; 
+}
+
 /* Theme Variables */
 :root {
     --background-color: #f0f2f5;
@@ -261,7 +304,8 @@ h2 {
     --delete-btn-hover-color: #d32f2f;
     --slider-off-color: #ccc;
     --slider-on-color: #3ab37c;
-    --checkbox-color: #3ab37c; /* Light theme checkbox color */
+    --checkbox-color: #3ab37c; 
+    --options-icon-color: #fcd53f; 
 }
 
 body.dark-mode {
@@ -280,5 +324,7 @@ body.dark-mode {
     --delete-btn-hover-color: #bf616a;
     --slider-off-color: #666;
     --slider-on-color: #81a1c1;
-    --checkbox-color: #81a1c1; /* Dark theme checkbox color */
+    --checkbox-color: #81a1c1; 
+    --options-icon-color: #fcd53f; 
 }
+
