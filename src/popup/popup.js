@@ -82,9 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const catDiv = document.createElement('div');
             catDiv.className = 'category-item';
             catDiv.dataset.name = category;
+            // Check if the category is 'Uncategorized' before adding the delete button
             catDiv.innerHTML = `
                 <h3>${category}</h3>
-                <button class="delete-category" data-category-name="${category}">🗑️</button>
+                ${category !== "Uncategorized" ? `<button class="delete-category" data-category-name="${category}">X</button>` : ""}
                 <div class="extensions-in-category"></div>
             `;
             const extContainer = catDiv.querySelector('.extensions-in-category');
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             categoriesContainer.appendChild(catDiv);
         });
     }
-
+    
     function handleDrop(event, categoryName) {
         event.preventDefault();
         const extensionData = JSON.parse(event.dataTransfer.getData('text/plain'));
