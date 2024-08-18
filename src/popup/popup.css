@@ -107,6 +107,63 @@ main {
     background-color: #b2dfdb;
 }
 
+/* Category style */
+#categories {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#categories h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+#category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #f4f4f9;
+    border: 1px solid #ddd;
+    position: relative;
+    min-height: 50px;
+}
+
+.category-item.dark-mode {
+    background-color: #383838;
+    border-color: #555;
+}
+
+.category-item:hover {
+    background-color: #b2dfdb;
+}
+
+.category-item .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
 /* Theme button style */
 #theme-toggle-popup {
     background-color: #3ab57d;

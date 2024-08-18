@@ -11,11 +11,19 @@
         <h1>Extension Organizer</h1>
         <button id="theme-toggle-popup">Dark Mode</button>
     </header>
-    <main>      
-        <section id="extensions">
-            <h2>Extensions</h2>
+    <main>
+        <section id="category-management">
+            <h2>Manage Categories</h2>
+            <input type="text" id="new-category-name" placeholder="Enter new category name">
+            <button id="add-category-button">Add Category</button>
+            <div id="category-list" class="category-list">
+                <!-- Dynamic categories will be added here -->
+            </div>
+        </section>
+        <section id="uncategorized-extensions">
+            <h2>Uncategorized Extensions</h2>
             <div id="extension-list" class="extension-list">
-                <!-- Extensions will be added here -->
+                <!-- Uncategorized extensions will be listed here -->
             </div>
         </section>
     </main>
