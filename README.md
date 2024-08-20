@@ -16,22 +16,57 @@
 
 ## Getting Started
 
-### Installation from Chrome Web Store
+### Installation
 
-Install **Extension Organizer** from the Chrome Web Store through the provided link for a hassle-free setup.
+#### Install from Chrome Web Store
 
-### Manual Installation
+You can easily install the extension directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/extension-organizer/cidoihbodlchadoknfiohphlokmlmokp?authuser=0&hl=tr).
 
-1. Download the latest source code from the [GitHub repository](https://github.com/firatkaanbitmez/chrome-extension-organizer).
-2. Extract and navigate to `chrome://extensions/` in your browser.
-3. Toggle 'Developer Mode' at the top-right to enable.
-4. Click 'Load unpacked' and select the extracted folder to add the extension.
+#### Manual Installation Using CRX File
+
+1. Download the latest release CRX file from the [Project page](https://github.com/firatkaanbitmez/chrome-extension-organizer/releases).
+2. Open Chrome and navigate to `chrome://extensions/`.
+3. Enable "Developer mode" by toggling the switch in the top right corner.
+4. Drag and drop the downloaded `.crx` file into the `chrome://extensions/` page to install the extension.
+
+#### Install Using Source Code
+
+1. Download the latest release from the [Project page](https://github.com/firatkaanbitmez/chrome-extension-organizer/releases).
+2. Extract the downloaded ZIP file.
+3. Open Chrome and navigate to `chrome://extensions/`.
+4. Enable "Developer mode" by toggling the switch in the top right corner.
+5. Click on "Load unpacked" and select the `Source` folder from the extracted files.
 
 ## How to Use
 
 - **Organize Your Extensions**: Automatically sorts new installations into 'Uncategorized' or a specified default category.
 - **Customize Categories**: Easily add and name categories through the user interface.
 - **Toggle Extensions**: Enable or disable any extension with a simple checkbox action.
+
+## Screenshots
+
+![Screenshot 1](https://raw.githubusercontent.com/firatkaanbitmez/chrome-extension-organizer/main/screenshot/ss1.png)
+![Screenshot 2](https://raw.githubusercontent.com/firatkaanbitmez/chrome-extension-organizer/main/screenshot/ss2.png)
+
+## Error Solutions for Chrome and Edge
+
+If you encounter the following error during installation:
+
+**EN**: "This extension is not from any known source, and may have been added without your knowledge."
+
+**TR**: "Bu uzantı, bilinen herhangi bir kaynaktan değil ve bilginiz dışında eklenmiş olabilir."
+
+Follow these steps to resolve the issue:
+
+1. Run the `fix.bat` file located in the project folder as an administrator. This will adjust the necessary Windows Registry settings to support the installation of the extension.
+2. The browsers will be restarted automatically upon completion.
+
+## Development
+
+To build and test the extension locally:
+
+1. Navigate to the `Source` folder in your terminal.
+2. Use the `fix.bat` script to register the extension and restart browsers.
 
 ## Configurable Options
 
@@ -52,7 +87,7 @@ Built with:
 
 ## Feedback and Support
 
-Got feedback or need help? Reach out via [email](mailto:your-email@example.com).
+Got feedback or need help? Reach out via [email](mailto:firatbitmez.dev@gmail.com).
 
 ## License
 
