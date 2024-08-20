@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Extension Organizer",
   "description": "Manage and categorize your Chrome extensions easily.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
