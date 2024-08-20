@@ -19,10 +19,9 @@ export const Service = (() => {
                 }
 
                 chrome.management.getAll((extensions) => {
-                    // Silinen uzantıları kontrol etmek için mevcut uzantı ID'lerini bir diziye alıyoruz
                     const existingExtensionIds = extensions.map((ext) => ext.id);
 
-                    // Kategorilerdeki silinen uzantıları temizleyelim
+                    // Silinen uzantıları temizleyelim
                     Object.keys(data.categories).forEach((category) => {
                         data.categories[category] = data.categories[category].filter((ext) =>
                             existingExtensionIds.includes(ext.id)
@@ -45,7 +44,7 @@ export const Service = (() => {
                     });
 
                     chrome.storage.local.set({ categories: data.categories }, () => {
-                        resolve(data.categories); // Kategorileri doğru şekilde geri döndürüyoruz
+                        resolve(data.categories); // Kategorileri geri döndürüyoruz
                     });
                 });
             });
@@ -80,7 +79,6 @@ export const Service = (() => {
                 const overIndex = category.findIndex((e) => e.id === draggedOverExtension.id);
 
                 if (draggedIndex > -1 && overIndex > -1) {
-                    // Sıralama için öğeyi yer değiştir
                     category.splice(draggedIndex, 1);
                     category.splice(overIndex, 0, draggedExtension);
                     data.categories[categoryName] = category;
@@ -97,27 +95,24 @@ export const Service = (() => {
                 if (!data.categories[categoryName]) {
                     data.categories[categoryName] = [];
                     chrome.storage.local.set({ categories: data.categories }, resolve);
+                } else {
+                    resolve();
                 }
             });
         });
     };
+
     const deleteCategory = (categoryName) => {
         return new Promise((resolve) => {
             chrome.storage.local.get({ categories: {} }, (data) => {
-                delete data.categories[categoryName]; // Kategoriyi sil
-                chrome.storage.local.set({ categories: data.categories }, resolve); // Güncellenmiş kategorileri kaydet
+                delete data.categories[categoryName];
+                chrome.storage.local.set({ categories: data.categories }, resolve);
             });
         });
     };
-    
+
     const openOptionsPage = () => {
         chrome.runtime.openOptionsPage();
-    };
-
-    const findCategoryForExtension = (categories, ext) => {
-        return Object.keys(categories).find((category) =>
-            categories[category].some((e) => e.id === ext.id)
-        );
     };
 
     return {
@@ -128,7 +123,7 @@ export const Service = (() => {
         moveExtensionToCategory,
         reorderExtensionsInCategory,
         addCategory,
-        deleteCategory, 
+        deleteCategory,
         openOptionsPage
     };
 })();

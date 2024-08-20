@@ -11,8 +11,8 @@ export const UI = (() => {
         optionsButton: document.getElementById('options-button')
     };
 
-    let draggedExtension = null; // Sürüklenen uzantıyı saklamak için
-    let draggedOverExtension = null; // Sürüklenilen öğenin üzerine gelinen uzantıyı saklamak için
+    let draggedExtension = null;
+    let draggedOverExtension = null;
 
     const init = () => {
         loadTheme();
@@ -63,32 +63,30 @@ export const UI = (() => {
             <button class="delete-category" data-category="${categoryName}">X</button>
             <div class="extensions-in-category"></div>
         `;
-    
+
         const extContainer = categoryDiv.querySelector('.extensions-in-category');
         extensions.forEach((ext) => {
             extContainer.appendChild(createExtensionDiv(ext, categoryName));
         });
-    
-        // Silme butonu olay dinleyicisi
+
         const deleteButton = categoryDiv.querySelector('.delete-category');
         deleteButton.addEventListener('click', () => {
             if (confirm(`Are you sure you want to delete the category "${categoryName}"?`)) {
                 Service.deleteCategory(categoryName).then(loadData);
             }
         });
-    
+
         categoryDiv.addEventListener('dragover', (e) => e.preventDefault());
         categoryDiv.addEventListener('drop', (e) => handleDrop(e, categoryName));
-    
+
         return categoryDiv;
     };
-    
 
     const createExtensionDiv = (ext, categoryName) => {
         const extDiv = document.createElement('div');
         extDiv.className = 'extension-item';
         extDiv.dataset.id = ext.id;
-        extDiv.draggable = true; // Sürüklenebilir yapıyoruz
+        extDiv.draggable = true;
 
         const iconURL = ext.icons && ext.icons.length > 0 ? ext.icons[ext.icons.length - 1].url : 'default_icon.png';
         extDiv.innerHTML = `
@@ -99,7 +97,6 @@ export const UI = (() => {
 
         const checkbox = extDiv.querySelector('input[type="checkbox"]');
 
-        // Checkbox olay dinleyicisi
         checkbox.addEventListener('change', async (e) => {
             e.preventDefault();
 
@@ -128,21 +125,19 @@ export const UI = (() => {
             }
         });
 
-        // Sürükleme olayları
         extDiv.addEventListener('dragstart', (e) => {
-            draggedExtension = ext; // Sürüklenen öğeyi sakla
+            draggedExtension = ext;
             e.dataTransfer.effectAllowed = 'move';
         });
 
         extDiv.addEventListener('dragover', (e) => {
             e.preventDefault();
-            draggedOverExtension = ext; // Sürüklenen öğenin üzerine gelinen öğeyi sakla
+            draggedOverExtension = ext;
         });
 
         extDiv.addEventListener('drop', (e) => {
             e.preventDefault();
             if (draggedExtension && draggedOverExtension && draggedExtension.id !== draggedOverExtension.id) {
-                // Sıralamayı güncelle
                 Service.reorderExtensionsInCategory(categoryName, draggedExtension, draggedOverExtension).then(loadData);
                 draggedExtension = null;
                 draggedOverExtension = null;
@@ -157,14 +152,21 @@ export const UI = (() => {
 
         if (draggedExtension) {
             Service.moveExtensionToCategory(draggedExtension, categoryName).then(loadData);
-            draggedExtension = null; // Sürüklenen öğeyi temizle
+            draggedExtension = null;
         }
     };
 
     const addCategory = () => {
         const categoryName = elements.newCategoryNameInput.value.trim();
-        if (categoryName && !categoryName.includes('Uncategorized')) {
-            Service.addCategory(categoryName).then(loadData);
+        if (categoryName && categoryName !== 'Uncategorized') {
+            Service.addCategory(categoryName).then(() => {
+                loadData();
+                elements.newCategoryNameInput.value = ''; // Metin alanını temizleyin
+            }).catch((error) => {
+                console.error('Category creation failed:', error);
+            });
+        } else {
+            alert('Please enter a valid category name.');
         }
     };
 
